@@ -34,8 +34,23 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          cd /path/to/your/strapi/app
+          # Ensure Node.js and npm are available
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+          nvm install 18
+          nvm use 18
+
+          # Navigate to your Strapi app directory
+          cd /actual/path/to/your/strapi/app
+
+          # Pull the latest changes from Git
           git pull
+
+          # Install dependencies
           npm install
+
+          # Build the Strapi app
           npm run build
+
+          # Restart or start the Strapi app with pm2
           pm2 restart strapi || pm2 start npm --name "strapi" -- start
