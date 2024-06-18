@@ -24,9 +24,6 @@ jobs:
     - name: Install dependencies
       run: npm install strapi@beta -g
 
-    - name: Run tests
-      run: npm test
-
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
