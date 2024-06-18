@@ -3,10 +3,10 @@ name: CI/CD for Strapi
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,17 +16,13 @@ jobs:
     - name: Install Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '18'
+        node-version: '14'
     
     - name: Install dependencies
       run: |
         npm install
         npm run build
-
-    - name: Start Strapi
-      run: npm start
-      background: true
-
+    
     - name: Run tests (if applicable)
       run: npm test
 
@@ -41,4 +37,4 @@ jobs:
           git pull
           npm install
           npm run build
-          npm restart
+          pm2 restart strapi || pm2 start npm --name "strapi" -- start
