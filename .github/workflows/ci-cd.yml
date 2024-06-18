@@ -40,20 +40,30 @@ jobs:
           nvm install 18
           nvm use 18
 
-          # Navigate to your Strapi app directory
-          cd /home/ubuntu/strapi-app
+           PROJECT_DIR="/home/ubuntu/strapi-app"
 
-          # Pull the latest changes from Git
-          git pull
+            # Remove the existing directory if it exists to avoid conflicts
+            if [ -d "$PROJECT_DIR" ]; then
+              rm -rf "$PROJECT_DIR"
+            fi
 
-          # Install dependencies
-          npm install
+            # Clone the repository
+            git clone https://github.com/veera1016/Task1.git "$PROJECT_DIR"
 
-          # Build the Strapi app
-          npm run build
+            # Navigate to project directory
+            cd "$PROJECT_DIR" || { echo "Directory $PROJECT_DIR does not exist."; exit 1; }
 
-          # Restart or start the Strapi app with pm2
-          pm2 restart strapi || pm2 start npm --name "strapi" -- start
+            # Pull the latest changes from the master branch
+            git pull origin master
 
-          # Display PM2 logs
-          pm2 logs strapi
+            # Check if package.json exists
+            if [ -f "package.json" ]; then
+              # Install dependencies
+              npm install
+            else
+              echo "package.json not found in $PROJECT_DIR."
+              exit 1
+            fi
+
+            # Build the project
+            npm run build
