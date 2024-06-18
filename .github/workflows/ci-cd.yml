@@ -1,0 +1,44 @@
+name: CI/CD for Strapi
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: Install dependencies
+      run: |
+        npm install
+        npm run build
+
+    - name: Start Strapi
+      run: npm start
+      background: true
+
+    - name: Run tests (if applicable)
+      run: npm test
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /path/to/your/strapi/app
+          git pull
+          npm install
+          npm run build
+          npm restart
