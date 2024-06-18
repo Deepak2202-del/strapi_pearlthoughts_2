@@ -16,12 +16,15 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'  # Ensure compatibility with your project
+        node-version: '18'  # Specify the version of Node.js you need
 
     - name: Upgrade npm
       run: npm install -g npm@latest
 
-    - name: Install dependencies
+    - name: Clear npm cache
+      run: npm cache clean --force
+
+    - name: Install Strapi globally
       run: npm install strapi@beta -g
 
     - name: Deploy to EC2
@@ -31,34 +34,48 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          
-          # Define the path to your Strapi app
-          APP_PATH="/home/ubuntu/strapi-app"
+          # Install nvm
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
-          # Check if the directory exists
-          if [ ! -d "$APP_PATH" ]; then
-            echo "Directory $APP_PATH does not exist."
-            exit 1
+          # Install Node.js and use the specified version
+          nvm install 18
+          nvm use 18
+
+          PROJECT_DIR="/home/ubuntu/strapi-app"
+
+          # Remove the existing directory if it exists to avoid conflicts
+          if [ -d "$PROJECT_DIR" ]; then
+            rm -rf "$PROJECT_DIR"
           fi
 
-          # Navigate to your Strapi app directory
-          cd $APP_PATH
+          # Clone the repository
+          git clone https://github.com/veera1016/Task1.git "$PROJECT_DIR"
+
+          # Navigate to project directory
+          cd "$PROJECT_DIR" || { echo "Directory $PROJECT_DIR does not exist."; exit 1; }
+
+          # Pull the latest changes from the master branch
+          git pull origin master
 
           # Check if package.json exists
-          if [ ! -f "package.json" ]; then
-            echo "package.json not found in $APP_PATH"
+          if [ -f "package.json" ]; then
+            # Install dependencies
+            npm install
+          else
+            echo "package.json not found in $PROJECT_DIR."
             exit 1
           fi
 
-          # Pull the latest changes from Git
-          git pull
+          # Check if nx is required and install it
+          if grep -q nx package.json; then
+            npm install -g nx
+          fi
 
-          # Install dependencies
-          npm install
-
-          # Build the Strapi app
+          # Build the project
           npm run build
 
           # Restart or start the Strapi app with pm2
           pm2 restart strapi || pm2 start npm --name "strapi" -- start
-          
+
