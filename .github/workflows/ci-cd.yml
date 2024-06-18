@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'  # Specify the version of Node.js you need
+        node-version: '18'
 
     - name: Upgrade npm
       run: npm install -g npm@latest
@@ -34,6 +34,8 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
+          set -e # Exit immediately if a command exits with a non-zero status
+
           # Install nvm
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -79,3 +81,13 @@ jobs:
           # Restart or start the Strapi app with pm2
           pm2 restart strapi || pm2 start npm --name "strapi" -- start
 
+          # Display PM2 logs
+          pm2 logs strapi
+
+    - name: Display PM2 status
+      run: |
+        ssh -o StrictHostKeyChecking=no -i /path/to/your-key.pem ubuntu@${{ secrets.EC2_HOST }} "pm2 status strapi"
+
+    - name: Check if port 1337 is open
+      run: |
+        ssh -o StrictHostKeyChecking=no -i /path/to/your-key.pem ubuntu@${{ secrets.EC2_HOST }} "sudo netstat -tuln | grep 1337"
