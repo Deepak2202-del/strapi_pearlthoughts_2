@@ -3,7 +3,7 @@ name: CI/CD for Strapi
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build-and-deploy:
@@ -16,7 +16,7 @@ jobs:
     - name: Install Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '18'
     
     - name: Install dependencies
       run: |
