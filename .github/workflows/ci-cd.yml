@@ -53,4 +53,7 @@ jobs:
           npm run build
 
           # Restart or start the Strapi app with pm2
-          npm run develop
+          pm2 restart strapi || pm2 start npm --name "strapi" -- start
+
+          # Display PM2 logs
+          pm2 logs strapi
