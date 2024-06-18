@@ -56,14 +56,14 @@ jobs:
             # Pull the latest changes from the master branch
             git pull origin master
 
-            # Check if package.json exists
-            if [ -f "package.json" ]; then
-              # Install dependencies
-              npm install
-            else
-              echo "package.json not found in $PROJECT_DIR."
-              exit 1
-            fi
+            cd Task1
+            
+            npm install strapi@beta -g
+            
+            strapi new my-project --dbclient=sqlite
+            
+            cd ashok-project
+            
+            npm run develop
 
-            # Build the project
-            npm run build
+            
