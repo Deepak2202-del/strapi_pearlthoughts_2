@@ -34,11 +34,6 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          # Ensure Node.js and npm are available
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-          nvm install 18
-          nvm use 18
           
            git clone https://github.com/veera1016/Task1.git
            
