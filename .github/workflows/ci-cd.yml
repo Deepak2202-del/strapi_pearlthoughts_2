@@ -16,13 +16,10 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '14'  # Ensure compatibility with your project
+        node-version: '18'  # Ensure compatibility with your project
 
     - name: Upgrade npm
       run: npm install -g npm@latest
-
-    - name: Clear npm cache
-      run: npm cache clean --force
 
     - name: Install dependencies
       run: npm install strapi@beta -g
