@@ -41,7 +41,7 @@ jobs:
           nvm use 18
 
           # Navigate to your Strapi app directory
-          cd /actual/path/to/your/strapi/app
+          cd /home/ubuntu/strapi-app
 
           # Pull the latest changes from Git
           git pull
