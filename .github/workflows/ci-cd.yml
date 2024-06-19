@@ -34,12 +34,13 @@ jobs:
           set -e
 
           # Update the package list and install Node.js and npm
+          
           sudo apt update
           sudo apt install -y nodejs npm
 
           # Clone the Strapi repository
           git clone https://github.com/Deepak2202-del/strapi_pearlthoughts_2.git
-          cd Task1
+          cd  strapi_pearlthoughts_2
 
           # Install Strapi globally
           sudo npm install strapi@beta -g
