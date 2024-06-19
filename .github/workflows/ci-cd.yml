@@ -31,7 +31,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          set -e
+        
 
           # Update the package list and install Node.js and npm
           
