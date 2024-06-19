@@ -39,16 +39,4 @@ jobs:
           git clone https://github.com/Deepak2202-del/strapi_pearlthoughts_2.git
           cd strapi_pearlthoughts_2
 
-          # Install Strapi globally
-          sudo npm install strapi@beta -g
-
-          # Create a new Strapi project
-          strapi new my-project-dbclient-sqlite
-
-
-          # Navigate to the new project directory
-          cd my-project
-          
-
-          # Start the Strapi application using pm2 (assuming pm2 is installed)
-          npm run develop
+         
