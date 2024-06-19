@@ -38,17 +38,17 @@ jobs:
           sudo apt install -y nodejs npm
 
           # Clone the Strapi repository
-          git clone https://github.com/veera1016/Task1.git
+          git clone https://github.com/Deepak2202-del/strapi_pearlthoughts_2.git
           cd Task1
 
           # Install Strapi globally
           sudo npm install strapi@beta -g
 
           # Create a new Strapi project
-          strapi new veera-project --dbclient=sqlite
+          strapi new project --dbclient=sqlite
 
           # Navigate to the new project directory
-          cd veera-project
+          cd project
 
           # Start the Strapi application using pm2
           pm2 start npm --name "strapi" -- run develop
