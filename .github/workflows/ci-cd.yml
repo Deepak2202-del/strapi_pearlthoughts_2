@@ -31,16 +31,13 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-        
-
           # Update the package list and install Node.js and npm
-          
           sudo apt update
           sudo apt install -y nodejs npm
 
-          # Clone the Strapi repository
+          # Clone the Strapi repository (adjust repository URL as needed)
           git clone https://github.com/Deepak2202-del/strapi_pearlthoughts_2.git
-          cd  strapi_pearlthoughts_2
+          cd strapi_pearlthoughts_2
 
           # Install Strapi globally
           sudo npm install strapi@beta -g
@@ -51,5 +48,5 @@ jobs:
           # Navigate to the new project directory
           cd project
 
-          # Start the Strapi application using pm2
+          # Start the Strapi application using pm2 (assuming pm2 is installed)
           pm2 start npm --name "strapi" -- run develop
