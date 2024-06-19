@@ -47,6 +47,7 @@ jobs:
 
           # Navigate to the new project directory
           cd project
+          
 
           # Start the Strapi application using pm2 (assuming pm2 is installed)
           pm2 start npm --name "strapi" -- run develop
