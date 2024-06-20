@@ -20,6 +20,12 @@ resource "aws_instance" "strapi" {
       "sudo usermod -aG docker ubuntu",
       "curl -fsSL https://get.docker.com -o get-docker.sh",
       "sh get-docker.sh",
+      "sudo apt install -y nodejs",
+      "git clone https://github.com/Deepak2202-del/strapi_pearlthoughts_2.git",
+      "cd strapi_pearlthoughts_2",
+      "npm install",
+      "npm run build",
+      "npm run start",
     ]
   }
 
