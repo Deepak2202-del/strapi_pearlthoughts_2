@@ -8,10 +8,10 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -25,26 +25,42 @@ jobs:
       run: npm cache clean --force
 
     - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          # Update the package list and install Node.js and npm
-          sudo apt update
-          sudo apt install -y nodejs npm
-        - name: Notify Success
-          # Clone the Strapi repository (adjust repository URL as needed)
-          git clone https://github.com/Deepak2202-del/strapi_pearlthoughts_2.git
-        - name: Notify Success
+          # Update and install dependencies
+          sudo apt-get update -y
+          sudo apt-get install -y nodejs npm git
+
+          # Clone or pull the latest code from the Strapi repository
+          if [ ! -d "strapi_pearlthoughts_2" ]; then
+            git clone https://github.com/Deepak2202-del/strapi_pearlthoughts_2.git
+          else
+            cd strapi_pearlthoughts_2
+            git pull
+            cd ..
+          fi
+
+          # Change directory to the Strapi project
           cd strapi_pearlthoughts_2
-          - name: Notify Success
-          sudo npm install strapi@beta -g
-          - name: Notify Success
-           strapi new my-project-dbclient-sqlite
-            cd my-project-dbclient-sqlite/
-            npm run develop
 
+          # Install project dependencies
+          npm install
 
-         
+          # Build and start the Strapi application
+          npm run build
+          npm run develop &
+
+          # Print a message indicating success
+          echo "Strapi has been deployed and started successfully."
+
+    - name: Notify Success
+      if: success()
+      run: echo "Deployment completed successfully!"
+
+    - name: Notify Failure
+      if: failure()
+      run: echo "Deployment failed!"
