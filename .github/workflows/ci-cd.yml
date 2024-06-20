@@ -38,10 +38,6 @@ jobs:
           # Clone the Strapi repository (adjust repository URL as needed)
           git clone https://github.com/Deepak2202-del/strapi_pearlthoughts_2.git
           cd strapi_pearlthoughts_2
-          sudo npm install strapi@beta -g
-           strapi new my-project-dbclient-sqlite
-            cd my-project-dbclient-sqlite/
-            npm run develop
-
+          
 
          
