@@ -31,9 +31,20 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          # Update and install dependencies
-          sudo apt-get update -y
-          sudo apt-get install -y nodejs npm git
+          # Ensure Docker is installed
+          if ! command -v docker &> /dev/null
+          then
+              echo "Docker could not be found, installing."
+              sudo apt-get update
+              sudo apt-get install -y docker.io
+          fi
+
+          # Ensure PM2 is installed
+          if ! command -v pm2 &> /dev/null
+          then
+              echo "PM2 could not be found, installing."
+              sudo npm install -g pm2
+          fi
 
           # Clone or pull the latest code from the Strapi repository
           if [ ! -d "strapi_pearlthoughts_2" ]; then
@@ -49,20 +60,16 @@ jobs:
 
           # Install project dependencies
           npm install
-          
-          # Install PM2
-          npm install -g pm2
 
-          # Build and start the Strapi application
+          # Build the Strapi application
           npm run build
 
-          # Start the Strapi application with PM2
+          # Start the Strapi application with PM2 and name it "strapi"
           pm2 start npm --name "strapi" -- run start
 
           # Save PM2 process list and enable startup on reboot
           pm2 save
           pm2 startup
-         
 
           # Print a message indicating success
           echo "Strapi has been deployed and started successfully."
@@ -74,4 +81,3 @@ jobs:
     - name: Notify Failure
       if: failure()
       run: echo "Deployment failed!"
-
