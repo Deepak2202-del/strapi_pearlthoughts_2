@@ -49,10 +49,20 @@ jobs:
 
           # Install project dependencies
           npm install
+          
+          # Install PM2
+          npm install -g pm2
 
           # Build and start the Strapi application
           npm run build
-          npm run develop &
+
+          # Start the Strapi application with PM2
+          pm2 start npm --name "strapi" -- run start
+
+          # Save PM2 process list and enable startup on reboot
+          pm2 save
+          pm2 startup
+         
 
           # Print a message indicating success
           echo "Strapi has been deployed and started successfully."
